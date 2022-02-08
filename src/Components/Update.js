@@ -100,7 +100,7 @@ function Update({channel,isUpdate,addNewChannel}) {
 
   return (
     <div style={{ marginLeft:'45%'}}>
-     {update && <h4  style={{border:'1px solid gray',padding:'15px',backgroundColor:'gray',color:'white'}} >{updateMsg}</h4>}
+     {!update && <h4  style={{marginLeft:'-82%',border:'1px solid gray',padding:'15px',backgroundColor:'gray',color:'white'}} >{updateMsg}</h4>}
      
       {!isUpdate &&  <div>
         <FormControl>
