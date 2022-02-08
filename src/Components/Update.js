@@ -1,12 +1,15 @@
 import React,{useState,useEffect} from 'react'
 import Button from '@mui/material/Button';
 import { FormControl,InputLabel,Input,FormHelperText} from '@mui/material';
+import {server} from "./Environment"
 
 function Update({channel,isUpdate,addNewChannel}) {
     let [channelName_,setChannelName]=useState("")
     let [url_,setChannelUrl]=useState("")
     let [purchaseLink_,setPurchaseLink]=useState("")
+    let [isYoutube_,setIsYoutube]=useState("")
     let [newChannelName_,setNewChannelName]=useState("")
+    let [newIsYoutube_,setNewIsYoutube]=useState("")
     let [newUrl_,setNewChannelUrl]=useState("")
     let [newPurchaseLink_,setNewPurchaseLink]=useState("")
     let [channels,setChannels]=useState([])
@@ -19,7 +22,7 @@ function Update({channel,isUpdate,addNewChannel}) {
 
 
     useEffect(async ()=>{
-        const res=await fetch("http://127.0.0.1:3005/store");
+        const res=await fetch(`${server}/channels`);
         const data=await res.json()
         setChannels(data)
         setNewIndex(data.length)
@@ -28,8 +31,9 @@ function Update({channel,isUpdate,addNewChannel}) {
            channels.map((cha,idx)=>{
                 if(cha.id === channel){
                     setChannelName(cha.channelName_)
-                    setChannelUrl(cha.url_)
+                    setChannelUrl(cha.videoURL_)
                     setPurchaseLink(cha.purchaseLink_)
+                    setIsYoutube(cha.isYoutube)
                     setUpdateIndex(idx)
                 }
            })
@@ -38,10 +42,11 @@ function Update({channel,isUpdate,addNewChannel}) {
        let Updatechannel= {   
             id:updateIndex+1,
             channelName_:channelName_,
-            url_:url_,
-            purchaseLink_:purchaseLink_
+            videoURL_:url_,
+            purchaseLink_:purchaseLink_,
+            isYoutube:isYoutube_
         } 
-        fetch('http://localhost:8081/channels/save', {
+        fetch(`${server}/channels`, {
             method: 'POST', 
             headers: {
               'Content-Type': 'application/json',
@@ -66,10 +71,11 @@ function Update({channel,isUpdate,addNewChannel}) {
         let NewChannel= {   
             id:newIndex+1,
             channelName_:newChannelName_,
-            url_:newUrl_,
-            purchaseLink_:newPurchaseLink_
+            videoURL_:newUrl_,
+            purchaseLink_:newPurchaseLink_,
+            isYoutube:newIsYoutube_
         }  
-        fetch('http://localhost:8081/newchannel', {
+        fetch(`${server}/newchannel`, {
             method: 'POST', 
             headers: {
               'Content-Type': 'application/json',
@@ -93,9 +99,9 @@ function Update({channel,isUpdate,addNewChannel}) {
 
 
   return (
-    <div>
+    <div style={{ marginLeft:'45%'}}>
      {update && <h4  style={{border:'1px solid gray',padding:'15px',backgroundColor:'gray',color:'white'}} >{updateMsg}</h4>}
-      server={process.env.SERVER_URL}
+     
       {!isUpdate &&  <div>
         <FormControl>
             <InputLabel htmlFor="my-input">Channel Name</InputLabel>
@@ -109,7 +115,7 @@ function Update({channel,isUpdate,addNewChannel}) {
         </FormControl>
         <br/> <br/>
         <FormControl>
-            <InputLabel htmlFor="my-input">Channel URL</InputLabel>
+            <InputLabel htmlFor="my-input">Video URL</InputLabel>
             <Input 
             id="my-input" 
             aria-describedby="my-helper-text" 
@@ -129,6 +135,16 @@ function Update({channel,isUpdate,addNewChannel}) {
             onChange={(e) => setPurchaseLink(e.target.value)} 
             />
         </FormControl> <br/> <br/>
+        <FormControl>
+            <InputLabel htmlFor="my-input">Is Youtube</InputLabel>
+            <Input 
+            id="my-input" 
+            aria-describedby="my-helper-text" 
+            type="text" 
+            value={isYoutube_}
+            onChange={(e) => setIsYoutube(e.target.value)} 
+            />
+        </FormControl><br/> <br/>
        <Button variant="contained" onClick={updateChannels}>Update</Button>
        </div>}
        <br/> <br/>
@@ -145,7 +161,7 @@ function Update({channel,isUpdate,addNewChannel}) {
         </FormControl>
         <br/> <br/>
         <FormControl>
-            <InputLabel htmlFor="my-input">Channel URL</InputLabel>
+            <InputLabel htmlFor="my-input">Video URL</InputLabel>
             <Input 
             id="my-input" 
             aria-describedby="my-helper-text" 
@@ -163,6 +179,16 @@ function Update({channel,isUpdate,addNewChannel}) {
             type="text" 
             value={newPurchaseLink_}
             onChange={(e) => setNewPurchaseLink(e.target.value)} 
+            />
+        </FormControl> <br/> <br/>
+        <FormControl>
+            <InputLabel htmlFor="my-input">Is Youtube</InputLabel>
+            <Input 
+            id="my-input" 
+            aria-describedby="my-helper-text" 
+            type="text" 
+            value={newIsYoutube_}
+            onChange={(e) => setNewIsYoutube(e.target.value)} 
             />
         </FormControl> <br/> <br/>
        <Button variant="contained" onClick={addNewChannels}>Add New Channel</Button>

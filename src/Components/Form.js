@@ -7,10 +7,11 @@ import Select from '@mui/material/Select';
 import FormShow from './FormShow';
 import Update from './Update';
 import Button from '@mui/material/Button';
+import {server} from "./Environment"
 
 function Form() {
     let [channels,setChannels]=useState([])
-    const [channel, setChannel] = useState('');
+    const [channel, setChannel] = useState(1);
     let [isUpdate,setIsUpdate]=useState(true)
     let [addNewChannel,setAddNewChannel]=useState(false)
 
@@ -20,7 +21,7 @@ function Form() {
     };
 
     useEffect(async ()=>{
-        const res=await fetch("http://127.0.0.1:3005/store");
+        const res=await fetch(`${server}/channels`);
         const data=await res.json()
         setChannels(data)
     },[channel,channels])
@@ -48,15 +49,16 @@ function Form() {
     <Button 
         variant="contained"
         onClick={()=>setIsUpdate(!isUpdate)}
+        style={{ marginLeft:'45%'}}
      >
-      {isUpdate?"Update":"Show Channel Details"}
+      {isUpdate?"Edit":"Back"}
     </Button>
        &nbsp;
     <Button 
     variant="contained"
     onClick={()=>setAddNewChannel(!addNewChannel)}
     >
-      Add New 
+     {!addNewChannel? "Add New ":"Back"}
     </Button>
       <br/> <br/> <br/>
     <Update channel={channel} isUpdate={isUpdate} addNewChannel={addNewChannel}/>
